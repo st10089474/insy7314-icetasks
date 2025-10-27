@@ -1,21 +1,25 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
+import cors from "cors";
+import posts from "./routes/post.mjs";
+import users from "./routes/user.mjs";
 
 const app = express();
-const urlprefix = "/api";
 
+app.use(cors());
 app.use(express.json());
 
-app.get(urlprefix + "/", (req, res) => {
-  res.send("I am really happy that I have figured this out (ST10089474)");
+// simple CORS headers like the screenshots
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+  res.setHeader("Access-Control-Allow-Methods", "*");
+  next();
 });
 
-app.get(urlprefix + "/orders", (req, res) => {
-  const orders = [
-    { id: "1", name: "Orange" },
-    { id: "2", name: "Apple" },
-    { id: "3", name: "Pear" }
-  ];
-  res.json({ message: "Fruits", orders });
-});
+app.use("/post", posts);
+app.use("/user", users);
 
 export default app;

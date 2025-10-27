@@ -2,20 +2,17 @@ import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 dotenv.config();
 
-const connectionString = process.env.ATLAS_URI || "";
-
-console.log(connectionString);
-
+const connectionString = process.env.MONGODB_URI || "";
 const client = new MongoClient(connectionString);
 
-let conn;
+let db;
 try {
-  conn = await client.connect();
+  await client.connect();
   console.log("mongoDB is CONNECTED!! :)");
+  // Use one DB for both collections as the guide shows
+  db = client.db("users");
 } catch (e) {
   console.error(e);
 }
-
-let db = client.db("users");
 
 export default db;
